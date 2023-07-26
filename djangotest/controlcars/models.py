@@ -58,7 +58,8 @@ class orders(models.Model):
                               on_delete=models.CASCADE)
     count = models.PositiveIntegerField(verbose_name="Количество")
     date = models.DateField(verbose_name='Дата',
-                            blank=True)
+                            blank=True,
+                            null=True)
 
     class Meta:
         verbose_name = 'Заказ'

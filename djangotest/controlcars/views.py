@@ -1,11 +1,12 @@
-from django.db.models import Sum, Count
+from django.db.models import Sum
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
+from django_filters.rest_framework import DjangoFilterBackend
 
+from .filters import OrdersFilter
 from .models import color_car, brand_car, model_car, orders
 from .serializers import ColorCarSerializer, BrandCarSerializer, ModelCarSerializer, OrdersSerializer, \
     SumCarsSerializer, CountCarsSerializer
-
 
 class ColorCarViewSet(viewsets.ModelViewSet):
     queryset = color_car.objects.all()
@@ -22,11 +23,12 @@ class ModelCarViewSet(viewsets.ModelViewSet):
 class OrdersViewSet(viewsets.ModelViewSet):
     queryset = orders.objects.all()
     serializer_class = OrdersSerializer
+    filterset_class = OrdersFilter
 
 class SumCarsAPIView(ListAPIView):
     queryset = model_car.objects.annotate(sum_cars=Sum('orders__count'))
     serializer_class = SumCarsSerializer
 
 class CountCarAPIView(ListAPIView):
-    queryset = color_car.objects.annotate(sum_cars=Sum('orders__model'))
+    queryset = color_car.objects.annotate(sum_cars=Sum('orders__count'))
     serializer_class = CountCarsSerializer

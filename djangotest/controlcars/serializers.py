@@ -1,3 +1,4 @@
+from django.forms import forms
 from django.utils.datetime_safe import date, datetime
 from rest_framework import serializers
 from .models import color_car, brand_car, model_car, orders
@@ -18,7 +19,6 @@ class ModelCarSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ModelCarToOrderSerializer(serializers.ModelSerializer):
-    brand = serializers.SlugRelatedField(read_only=True, slug_field='name')
     class Meta:
         model = model_car
         fields = ['name', 'brand']
@@ -28,6 +28,27 @@ class OrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = orders
         fields = '__all__'
+
+    def create(self, validated_data):
+        print(validated_data)
+        model = validated_data.pop('model')
+        current_model, status = model_car.objects.get_or_create(**model)
+        print(current_model)
+        print(status)
+        order = orders.objects.create(model=current_model, **validated_data)
+
+        return order
+
+    def validate_date(self, attrs):
+        if attrs is None:
+            attrs = date.today()
+        return attrs
+
+    def validate_model(self, attrs):
+        check_model = model_car.objects.filter(name=f"{attrs['name']}").exists()
+        if not check_model:
+            raise forms.ValidationError("Такая модель отсутствует в каталоге")
+        return attrs
 
 class SumCarsSerializer(serializers.Serializer):
     brand_id = serializers.IntegerField()

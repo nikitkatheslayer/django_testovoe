@@ -16,8 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 from controlcars.views import ColorCarViewSet, BrandCarViewSet, ModelCarViewSet, OrdersViewSet, SumCarsAPIView, CountCarAPIView
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 router = DefaultRouter()
 router.register('color_car', ColorCarViewSet)
@@ -25,9 +28,22 @@ router.register('brand', BrandCarViewSet)
 router.register('model', ModelCarViewSet)
 router.register('orders', OrdersViewSet)
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Library",
+        default_version='v1',
+        description="Documentation",
+        contact=openapi.Contact(email="admin@mail.ru"),
+        license=openapi.License(name="MIT License")
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny]
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/sum_cars/brand/', SumCarsAPIView.as_view()),
-    path('api/sum_cars/color/', CountCarAPIView.as_view())
+    path('api/sum_cars/color/', CountCarAPIView.as_view()),
+    path('swagger/', schema_view.with_ui('swagger'))
 ]
