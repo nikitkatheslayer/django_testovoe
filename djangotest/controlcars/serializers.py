@@ -19,6 +19,7 @@ class ModelCarSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ModelCarToOrderSerializer(serializers.ModelSerializer):
+    brand = serializers.CharField(read_only=True)
     class Meta:
         model = model_car
         fields = ['name', 'brand']
