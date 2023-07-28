@@ -1,7 +1,7 @@
 from django.forms import forms
 from django.utils.datetime_safe import date, datetime
 from rest_framework import serializers
-from .models import color_car, brand_car, model_car, orders
+from controlcars.models import color_car, brand_car, model_car, orders
 
 class ColorCarSerializer(serializers.ModelSerializer):
     class Meta:

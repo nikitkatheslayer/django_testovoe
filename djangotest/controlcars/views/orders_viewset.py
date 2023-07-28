@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from controlcars.filters import OrdersFilter
 from controlcars.models import orders
-from controlcars.serializers import OrdersSerializer
+from controlcars.serializers.serializers import OrdersSerializer
 
 
 @extend_schema_view(

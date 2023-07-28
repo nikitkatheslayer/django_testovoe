@@ -1,8 +1,9 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from controlcars.models import color_car
-from controlcars.serializers import ColorCarSerializer
+from controlcars.serializers.serializers import ColorCarSerializer
 
 
 @extend_schema_view(
@@ -16,3 +17,4 @@ from controlcars.serializers import ColorCarSerializer
 class ColorCarViewSet(viewsets.ModelViewSet):
     queryset = color_car.objects.all()
     serializer_class = ColorCarSerializer
+    permission_classes = [IsAuthenticated, ]
